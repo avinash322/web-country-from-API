@@ -8,6 +8,10 @@
     <title>Tugas Semantik</title>
     <!-- Load Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.min.js"></script>
 </head>
 
 <body>
@@ -23,13 +27,7 @@
                         <a class="nav-link active" aria-current="page" href="#">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">All Country</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Link</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                        <a class="nav-link" href="allcountry.php">All Country</a>
                     </li>
                 </ul>
             </div>
@@ -107,55 +105,7 @@
             curl_close($curl);
         }
 
-        function showCountryXmlModal()
-        {
-            // Check if the country.xml file exists
-            if (!file_exists('country.xml')) {
-                echo "<script>alert('The country.xml file does not exist. Please fetch data first.');</script>";
-                return;
-            }
 
-            // Load the XML file into a SimpleXMLElement object
-            $xml = simplexml_load_file('country.xml');
-
-            // Get the XML string representation of the SimpleXMLElement object
-            $xmlString = $xml->asXML();
-
-            // Escape special characters in the XML string
-            $escapedXmlString = htmlspecialchars($xmlString, ENT_QUOTES);
-
-            // Echo the HTML code for the modal
-            echo '<div id="countryXmlModal" class="modal">
-                <div class="modal-content">
-                    <span class="close">&times;</span>
-                    <h3>country.xml</h3>
-                    <pre>' . $escapedXmlString . '</pre>
-                </div>
-              </div>';
-
-            // Echo the JavaScript code to show the modal when the page is loaded
-            echo '<script>
-                document.addEventListener("DOMContentLoaded", function() {
-                    var modal = document.getElementById("countryXmlModal");
-                    var btn = document.getElementById("showXmlBtn");
-                    var span = document.getElementsByClassName("close")[0];
-    
-                    btn.onclick = function() {
-                        modal.style.display = "block";
-                    }
-    
-                    span.onclick = function() {
-                        modal.style.display = "none";
-                    }
-    
-                    window.onclick = function(event) {
-                        if (event.target == modal) {
-                            modal.style.display = "none";
-                        }
-                    }
-                });
-              </script>';
-        }
 
         // Check if the form has been submitted
         if (isset($_POST['submit'])) {
@@ -192,8 +142,11 @@
             );
             echo "<script>alert('The data has been cleared from country.xml');</script>";
         } else if (isset($_POST['showxml'])) {
-            showCountryXmlModal();
-            echo "<script>alert('The data has been show from country.xml');</script>";
+            echo '<script type="text/javascript">';
+            echo 'window.onload = function() {';
+            echo '    $("#myModal").modal("show");';
+            echo '}';
+            echo '</script>';
         }
 
         ?>
@@ -201,14 +154,37 @@
             <form method="post">
                 <div class="form-group">
                     <label for="IDCountry">ID Country</label>
-                    <input type="text" class="form-control" id="IDCountry" name="IDCountry" maxlength="2" required>
+                    <input type="text" class="form-control" id="IDCountry" name="IDCountry" maxlength="2">
                 </div>
                 <button type="submit" name="submit" class="btn btn-primary">Submit</button>
                 <button type="submit" name="reset" class="btn btn-danger">Reset</button>
                 <button type="submit" name="showxml" class="btn btn-secondary">Show XML</button>
             </form>
         </div>
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    </div>
+                    <div class="modal-body">
+                        <?php
+                        $xml_file = 'country.xml';
+                        $xml_contents = file_get_contents($xml_file);
+                        echo htmlentities($xml_contents);
+                        ?>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
+
+
 
 
 
