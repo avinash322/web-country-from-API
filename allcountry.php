@@ -37,7 +37,7 @@
         function fetchAllCountryData()
         {
             // Set the API endpoint URL
-            $url = "https://restcountries.com/v2/alpha/all";
+            $url = "https://restcountries.com/v2/all";
 
             // Initialize a cURL session
             $curl = curl_init($url);
@@ -84,17 +84,19 @@
                 <tbody>
                     <?php foreach ($countries as $key => $country) { ?>
                         <tr>
-                            <th scope="row"><?php echo $key + 1 ?></th>
-                            <td><?php echo $country['alpha2Code'] ?></td>
+                            <th scope="row"><?php echo ((int)$key + 1) ?></th>
+                            <td><?php echo $country['alpha2Code']; ?></td>
                             <td><?php echo $country['name'] ?></td>
-                            <td><?php echo $country['capital'] ?></td>
+                            <td><?php echo isset($country['capital']) ? $country['capital'] : $country['name']; ?></td>
                             <td><?php echo $country['population'] ?></td>
                             <td><img src="<?php echo $country['flag'] ?>" width="50" height="30" alt=""></td>
                         </tr>
                     <?php } ?>
                 </tbody>
             </table>
+
         </div>
+
     </div>
 
 
